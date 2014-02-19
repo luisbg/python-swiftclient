@@ -79,13 +79,13 @@ st_delete_help = '''
 Delete a container or objects within a container
 
 Positional arguments:
-  <container>           Name of container to delete from
+  <container>           Name of container to delete from.
   [object]              Name of object to delete. Specify multiple times
-                        for multiple objects
+                        for multiple objects.
 
 Optional arguments:
-  --all                 Delete all containers and objects
-  --leave-segments      Do not delete segments of manifest objects
+  --all                 Delete all containers and objects.
+  --leave-segments      Do not delete segments of manifest objects.
   --object-threads <threads>
                         Number of threads to use for deleting objects.
                         Default is 10
@@ -98,19 +98,19 @@ Optional arguments:
 def st_delete(parser, args, thread_manager):
     parser.add_option(
         '-a', '--all', action='store_true', dest='yes_all',
-        default=False, help='Indicates that you really want to delete '
-        'everything in the account')
+        default=False, help='Delete all containers and objects.')
     parser.add_option(
         '', '--leave-segments', action='store_true',
         dest='leave_segments', default=False,
-        help='Indicates that you want the segments of manifest'
-             'objects left alone')
+        help='Do not delete segments of manifest objects.')
     parser.add_option(
         '', '--object-threads', type=int,
-        default=10, help='Number of threads to use for deleting objects')
+        default=10, help='Number of threads to use for deleting objects. '
+        'Default is 10')
     parser.add_option('', '--container-threads', type=int,
                       default=10, help='Number of threads to use for '
-                      'deleting containers')
+                      'deleting containers. '
+                      'Default is 10')
     (options, args) = parse_args(parser, args)
     args = args[1:]
     if (not args and not options.yes_all) or (args and options.yes_all):
@@ -231,8 +231,8 @@ def st_delete(parser, args, thread_manager):
             elif len(args) == 1:
                 if '/' in args[0]:
                     print >> stderr, 'WARNING: / in container name; you ' \
-                        'might have meant %r instead of %r.' % (
-                        args[0].replace('/', ' ', 1), args[0])
+                        'might have meant %r instead of %r.' % \
+                        (args[0].replace('/', ' ', 1), args[0])
                 container_queue.put(args[0])
             else:
                 for obj in args[1:]:
@@ -255,14 +255,14 @@ Positional arguments:
                         objects from the container.
 
 Optional arguments:
-  --all                 Indicates that you really want to download
-                        everything in the account
+  --all                 Indicates that you really want to download everything
+                        in the account.
   --marker              Marker to use when starting a container or account
-                        download
-  --prefix <prefix>     Only download items beginning with <prefix>
+                        download.
+  --prefix <prefix>     Only download items beginning with <prefix>.
   --output <out_file>   For a single file download, stream the output to
                         <out_file>. Specifying "-" as <out_file> will
-                        redirect to stdout
+                        redirect to stdout.
   --object-threads <threads>
                         Number of threads to use for downloading objects.
                         Default is 10
@@ -270,12 +270,13 @@ Optional arguments:
                         Number of threads to use for downloading containers.
                         Default is 10
   --no-download         Perform download(s), but don't actually write anything
-                        to disk
+                        to disk.
   --header <header_name:header_value>
                         Adds a customized request header to the query, like
                         "Range" or "If-Match". This argument is repeatable.
                         Example --header "content-type:text/plain"
-  --skip-identical      Skip downloading files that are identical on both sides
+  --skip-identical      Skip downloading files that are identical on both
+                        sides.
 '''.strip("\n")
 
 
@@ -283,38 +284,40 @@ def st_download(parser, args, thread_manager):
     parser.add_option(
         '-a', '--all', action='store_true', dest='yes_all',
         default=False, help='Indicates that you really want to download '
-        'everything in the account')
+        'everything in the account.')
     parser.add_option(
         '-m', '--marker', dest='marker',
         default='', help='Marker to use when starting a container or '
-        'account download')
+        'account download.')
     parser.add_option(
         '-p', '--prefix', dest='prefix',
-        help='Will only download items beginning with the prefix')
+        help='Only download items beginning with the <prefix>.')
     parser.add_option(
         '-o', '--output', dest='out_file', help='For a single '
-        'file download, stream the output to an alternate location ')
+        'For a single file download, stream the output to <out_file>. '
+        'Specifying "-" as <out_file> will redirect to stdout.')
     parser.add_option(
         '', '--object-threads', type=int,
-        default=10, help='Number of threads to use for downloading objects')
+        default=10, help='Number of threads to use for downloading objects. '
+        'Default is 10')
     parser.add_option(
         '', '--container-threads', type=int, default=10,
-        help='Number of threads to use for downloading containers')
+        help='Number of threads to use for downloading containers. '
+        'Default is 10')
     parser.add_option(
         '', '--no-download', action='store_true',
         default=False,
-        help="Perform download(s), but don't actually write anything to disk")
+        help="Perform download(s), but don't actually write anything to disk.")
     parser.add_option(
         '-H', '--header', action='append', dest='header',
         default=[],
-        help='Specify a request header, as --header NAME:VALUE. '
-        'Adds a customized request header to the query, like "Range" or '
-        '"If-Match". This argument is repeatable. Example'
-        ' --header "content-type:text/plain"')
+        help='Adds a customized request header to the query, like "Range" or '
+        '"If-Match". This argument is repeatable. '
+        'Example --header "content-type:text/plain"')
     parser.add_option(
         '--skip-identical', action='store_true', dest='skip_identical',
         default=False, help='Skip downloading files that are identical on '
-        'both sides')
+        'both sides.')
     (options, args) = parse_args(parser, args)
     args = args[1:]
     if options.out_file == '-':
@@ -511,13 +514,14 @@ st_list_help = '''
 Lists the containers for the account or the objects for a container
 
 Positional arguments:
-  [container]           Name of container to list object in
+  [container]           Name of container to list object in.
 
 Optional arguments:
-  --long                Long listing format, similar to ls -l
-  --lh                  Report sizes in human readable format similar to ls -lh
-  --totals              Used with -l or --lh, only report totals
-  --prefix              Only list items beginning with the prefix
+  --long                Long listing format, similar to ls -l.
+  --lh                  Report sizes in human readable format similar to
+                        ls -lh.
+  --totals              Used with -l or --lh, only report totals.
+  --prefix              Only list items beginning with the prefix.
   --delimiter           Roll up items with the given delimiter. For containers
                         only. See OpenStack Swift API documentation for what
                         this means.
@@ -526,23 +530,23 @@ Optional arguments:
 
 def st_list(parser, args, thread_manager):
     parser.add_option(
-        '-l', '--long', dest='long', help='Long listing '
-        'similar to ls -l command', action='store_true', default=False)
+        '-l', '--long', dest='long', action='store_true', default=False,
+        help='Long listing format, similar to ls -l.')
     parser.add_option(
-        '--lh', dest='human', help='report sizes as human '
-        "similar to ls -lh switch, but -h taken", action='store_true',
-        default=False)
+        '--lh', dest='human', action='store_true',
+        default=False, help='Report sizes in human readable format '
+        "similar to ls -lh.")
     parser.add_option(
-        '-t', '--totals', dest='totals', help='used with -l or --lh, '
-                                              'only report totals',
-        action='store_true', default=False)
+        '-t', '--totals', dest='totals', action='store_true', default=False,
+        help='Used with -l or --lh, only report totals.')
     parser.add_option(
         '-p', '--prefix', dest='prefix',
-        help='Will only list items beginning with the prefix')
+        help='Only list items beginning with the prefix.')
     parser.add_option(
         '-d', '--delimiter', dest='delimiter',
-        help='Will roll up items with the given delimiter'
-        ' (see OpenStack Swift API documentation for what this means)')
+        help='Roll up items with the given delimiter. '
+        'For containers only. Ssee OpenStack Swift API documentation for '
+        'what this means)')
     (options, args) = parse_args(parser, args)
     args = args[1:]
     if options.delimiter and not args:
@@ -631,19 +635,20 @@ st_stat_help = '''
 Displays information for the account, container, or object
 
 Positional arguments:
-  [container]           Name of container to stat from
+  [container]           Name of container to stat from.
   [object]              Name of object to stat. Specify multiple times
-                        for multiple objects
+                        for multiple objects.
 
 Optional arguments:
-  --lh                  Report sizes in human readable format similar to ls -lh
+  --lh                  Report sizes in human readable format similar to
+                        ls -lh.
 '''.strip('\n')
 
 
 def st_stat(parser, args, thread_manager):
     parser.add_option(
-        '--lh', dest='human', help="report totals like 'list --lh'",
-        action='store_true', default=False)
+        '--lh', dest='human', action='store_true', default=False,
+        help='Report sizes in human readable format similar to ls -lh.')
     (options, args) = parse_args(parser, args)
     args = args[1:]
     conn = get_conn(options)
@@ -689,9 +694,9 @@ Updates meta information for the account, container, or object.
 If the container is not found, it will be created automatically.
 
 Positional arguments:
-  [container]           Name of container to post to
+  [container]           Name of container to post to.
   [object]              Name of object to post. Specify multiple times
-                        for multiple objects
+                        for multiple objects.
 
 Optional arguments:
   --read-acl <acl>      Read ACL for containers. Quick summary of ACL syntax:
@@ -699,8 +704,8 @@ Optional arguments:
                         account2:user2
   --write-acl <acl>     Write ACL for containers. Quick summary of ACL syntax:
                         account1 account2:user2
-  --sync-to <sync-to>   Sync To for containers, for multi-cluster replication
-  --sync-key <sync-key> Sync Key for containers, for multi-cluster replication
+  --sync-to <sync-to>   Sync To for containers, for multi-cluster replication.
+  --sync-key <sync-key> Sync Key for containers, for multi-cluster replication.
   --meta <name:value>   Sets a meta data item. This option may be repeated.
                         Example: -m Color:Blue -m Size:Large
   --header <header>     Set request headers. This option may be repeated.
@@ -710,12 +715,12 @@ Optional arguments:
 
 def st_post(parser, args, thread_manager):
     parser.add_option(
-        '-r', '--read-acl', dest='read_acl', help='Sets the '
-        'Read ACL for containers. Quick summary of ACL syntax: .r:*, '
-        '.r:-.example.com, .r:www.example.com, account1, account2:user2')
+        '-r', '--read-acl', dest='read_acl', help='Read ACL for containers. '
+        'Quick summary of ACL syntax: .r:*, .r:-.example.com, '
+        '.r:www.example.com, account1, account2:user2')
     parser.add_option(
-        '-w', '--write-acl', dest='write_acl', help='Sets the '
-        'Write ACL for containers. Quick summary of ACL syntax: account1, '
+        '-w', '--write-acl', dest='write_acl', help='Write ACL for '
+        'containers. Quick summary of ACL syntax: account1, '
         'account2:user2')
     parser.add_option(
         '-t', '--sync-to', dest='sync_to', help='Sets the '
@@ -725,12 +730,12 @@ def st_post(parser, args, thread_manager):
         'Sync Key for containers, for multi-cluster replication.')
     parser.add_option(
         '-m', '--meta', action='append', dest='meta', default=[],
-        help='Sets a meta data item with the syntax name:value. This option '
-        'may be repeated. Example: -m Color:Blue -m Size:Large')
+        help='Sets a meta data item. This option may be repeated. '
+        'Example: -m Color:Blue -m Size:Large')
     parser.add_option(
         '-H', '--header', action='append', dest='header',
-        default=[], help='Set request headers with the syntax header:value. '
-        ' This option may be repeated. Example -H "content-type:text/plain" '
+        default=[], help='Set request headers. This option may be repeated. '
+        'Example -H "content-type:text/plain" '
         '-H "Content-Length: 4000"')
     (options, args) = parse_args(parser, args)
     args = args[1:]
@@ -796,24 +801,24 @@ st_upload_help = '''
 Uploads specified files and directories to the given container
 
 Positional arguments:
-  <container>           Name of container to upload to
+  <container>           Name of container to upload to.
   <file_or_directory>   Name of file or directory to upload. Specify multiple
-                        times for multiple uploads
+                        times for multiple uploads.
 
 Optional arguments:
   --changed             Only upload files that have changed since the last
-                        upload
-  --skip-identical      Skip uploading files that are identical on both sides
+                        upload.
+  --skip-identical      Skip uploading files that are identical on both sides.
   --segment-size <size> Upload files in segments no larger than <size> and
                         then create a "manifest" file that will download all
-                        the segments as if it were the original file
+                        the segments as if it were the original file.
   --segment-container <container>
                         Upload the segments into the specified container. If
                         not specified, the segments will be uploaded to a
                         <container>_segments container so as to not pollute the
                         main <container> listings.
   --leave-segments      Indicates that you want the older segments of manifest
-                        objects left alone (in the case of overwrites)
+                        objects left alone (in the case of overwrites).
   --object-threads <threads>
                         Number of threads to use for uploading full objects.
                         Default is 10.
@@ -823,47 +828,49 @@ Optional arguments:
   --header <header>     Set request headers with the syntax header:value.
                         This option may be repeated.
                         Example -H "content-type:text/plain".
-  --use-slo             When used in conjunction with --segment-size will
+  --use-slo             When used in conjunction with --segment-size it will
                         create a Static Large Object instead of the default
                         Dynamic Large Object.
   --object-name <object-name>
                         Upload file and name object to <object-name> or upload
                         dir and use <object-name> as object prefix instead of
-                        folder name
+                        folder name.
 '''.strip('\n')
 
 
 def st_upload(parser, args, thread_manager):
     parser.add_option(
         '-c', '--changed', action='store_true', dest='changed',
-        default=False, help='Will only upload files that have changed since '
-        'the last upload')
+        default=False, help='Only upload files that have changed since '
+        'the last upload.')
     parser.add_option(
         '--skip-identical', action='store_true', dest='skip_identical',
         default=False, help='Skip uploading files that are identical on '
-        'both sides')
+        'both sides.')
     parser.add_option(
-        '-S', '--segment-size', dest='segment_size', help='Will '
-        'upload files in segments no larger than <size> and then create a '
-        '"manifest" file that will download all the segments as if it were '
-        'the original file.')
+        '-S', '--segment-size', dest='segment_size', help='Upload files '
+        'in segments no larger than <size> and then create a "manifest" '
+        'file that will download all the segments as if it were the original '
+        'file.')
     parser.add_option(
         '-C', '--segment-container', dest='segment_container',
-        help='Will upload the segments into the specified container.'
-        'If not specified, the segments will be uploaded to '
+        help='Upload the segments into the specified container. '
+        'If not specified, the segments will be uploaded to a '
         '<container>_segments container so as to not pollute the main '
         '<container> listings.')
     parser.add_option(
         '', '--leave-segments', action='store_true',
         dest='leave_segments', default=False, help='Indicates that you want '
         'the older segments of manifest objects left alone (in the case of '
-        'overwrites)')
+        'overwrites).')
     parser.add_option(
         '', '--object-threads', type=int, default=10,
-        help='Number of threads to use for uploading full objects')
+        help='Number of threads to use for uploading full objects. '
+        'Default is 10.')
     parser.add_option(
         '', '--segment-threads', type=int, default=10,
-        help='Number of threads to use for uploading object segments')
+        help='Number of threads to use for uploading object segments. '
+        'Default is 10.')
     parser.add_option(
         '-H', '--header', action='append', dest='header',
         default=[], help='Set request headers with the syntax header:value. '
@@ -871,12 +878,13 @@ def st_upload(parser, args, thread_manager):
         '-H "Content-Length: 4000"')
     parser.add_option(
         '', '--use-slo', action='store_true', default=False,
-        help='When used in conjunction with --segment-size will '
+        help='When used in conjunction with --segment-size it will '
         'create a Static Large Object instead of the default '
         'Dynamic Large Object.')
     parser.add_option(
         '', '--object-name', dest='object_name',
-        help='Upload file and name object to the name specified')
+        help='Upload file and name object to <object-name> or upload dir and '
+        'use <object-name> as object prefix instead of folder name.')
     (options, args) = parse_args(parser, args)
     args = args[1:]
     if len(args) < 2:
@@ -1308,16 +1316,16 @@ Command-line interface to the OpenStack Swift API.
 
 Positional arguments:
   <subcommand>
-    delete               Delete a container or objects within a container
-    download             Download objects from containers
+    delete               Delete a container or objects within a container.
+    download             Download objects from containers.
     list                 Lists the containers for the account or the objects
-                         for a container
+                         for a container.
     post                 Updates meta information for the account, container,
-                         or object; creates containers if not present
+                         or object; creates containers if not present.
     stat                 Displays information for the account, container,
-                         or object
+                         or object.
     upload               Uploads files or directories to the given container
-    capabilities         List cluster capabilities
+    capabilities         List cluster capabilities.
 
 
 Examples:
@@ -1449,7 +1457,7 @@ Examples:
                       default=True,
                       help='This option is deprecated and not used anymore. '
                            'SSL compression should be disabled by default '
-                           'by the system SSL library')
+                           'by the system SSL library.')
     parser.disable_interspersed_args()
     (options, args) = parse_args(parser, argv[1:], enforce_requires=False)
     parser.enable_interspersed_args()
